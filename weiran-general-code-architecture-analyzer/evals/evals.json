@@ -1,0 +1,23 @@
+{
+  "skill_name": "weiran-general-code-architecture-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "分析当前项目的架构，找出冗余代码和设计问题",
+      "expected_output": "完整的架构分析报告，包含项目概览、架构分析、冗余问题列表、设计缺陷、遗漏点和优化建议",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "帮我梳理这个项目的业务逻辑，看看有没有设计遗漏的地方",
+      "expected_output": "业务逻辑梳理结果，核心流程说明，以及设计遗漏点分析和改进建议",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "扫描项目代码，给出架构优化建议",
+      "expected_output": "项目架构评估，问题列表，以及分优先级的优化建议",
+      "files": []
+    }
+  ]
+}

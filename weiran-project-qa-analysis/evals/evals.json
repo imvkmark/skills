@@ -1,0 +1,101 @@
+{
+  "skill_name": "weiran-project-qa-analysis",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "请分析当前 Weiran 项目的质量状况，重点检查代码规范和测试覆盖率",
+      "expected_output": "生成包含代码质量、单元测试、API文档和架构分析的综合报告，指出违规项并提供改进建议",
+      "files": [],
+      "assertions": [
+        {
+          "name": "包含代码质量分析",
+          "description": "报告必须包含代码质量维度的分析，包括严格类型检查、调试函数检查、命名规范检查等",
+          "type": "content",
+          "pattern": "代码质量|strict_types|dd\\(|dump\\("
+        },
+        {
+          "name": "包含单元测试分析",
+          "description": "报告必须包含单元测试维度的分析，包括测试结构、覆盖率、测试质量等",
+          "type": "content",
+          "pattern": "单元测试|tests/|coverage|AAA|Faker"
+        },
+        {
+          "name": "包含API文档分析",
+          "description": "报告必须包含API文档维度的分析，包括OpenAPI属性、Request/Response类、版本控制等",
+          "type": "content",
+          "pattern": "API文档|OA\\(|Request|Response|版本控制"
+        },
+        {
+          "name": "包含架构分析",
+          "description": "报告必须包含架构维度的分析，包括设计模式、解耦程度等",
+          "type": "content",
+          "pattern": "架构|设计模式|Repository|Policy|Action|依赖注入"
+        },
+        {
+          "name": "提供改进建议",
+          "description": "报告必须包含具体的改进建议",
+          "type": "content",
+          "pattern": "改进建议|修复方法|建议"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "检查项目是否符合 Weiran Framework 规范，特别是 API 文档和架构设计",
+      "expected_output": "分析项目结构、代码规范、API文档完整性和架构模式，报告发现的问题和改进方案",
+      "files": [],
+      "assertions": [
+        {
+          "name": "分析项目结构",
+          "description": "报告必须分析项目结构是否符合规范",
+          "type": "content",
+          "pattern": "项目结构|modules/|src/|tests/"
+        },
+        {
+          "name": "检查代码规范",
+          "description": "报告必须检查代码规范是否符合标准",
+          "type": "content",
+          "pattern": "代码规范|PSR-12|命名规范|严格类型"
+        },
+        {
+          "name": "API文档完整性",
+          "description": "报告必须检查API文档的完整性",
+          "type": "content",
+          "pattern": "API文档|OpenAPI|Swagger|OA\\("
+        },
+        {
+          "name": "架构模式分析",
+          "description": "报告必须分析架构模式是否符合最佳实践",
+          "type": "content",
+          "pattern": "架构模式|Repository|Policy|Action|事件驱动"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "对项目进行全面的 QA 分析，包括代码质量、测试覆盖和接口文档",
+      "expected_output": "生成详细的质量分析报告，包含各维度的得分、问题列表和优化建议",
+      "files": [],
+      "assertions": [
+        {
+          "name": "各维度得分",
+          "description": "报告必须包含各维度的得分",
+          "type": "content",
+          "pattern": "代码质量.*分|单元测试.*分|API文档.*分|架构.*分"
+        },
+        {
+          "name": "问题列表",
+          "description": "报告必须包含问题列表",
+          "type": "content",
+          "pattern": "问题列表|违规项|不符合"
+        },
+        {
+          "name": "优化建议",
+          "description": "报告必须包含优化建议",
+          "type": "content",
+          "pattern": "优化建议|改进方案|修复方法"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "skill_name": "viral-tech-editor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "写一篇关于如何使用 Zustand 替代 Redux 在 React 项目中进行状态管理的文章。我之前用 Redux 觉得太重了，现在想换成 Zustand。",
+      "expected_output": "一篇包含安装与兼容性、快速开始、核心选项、架构浅析与进阶、常见排错、实战示例六个核心结构，采用直角引号、去掉AI味的高级技术文档，并保存为 markdown 文件。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "contains_installation",
+          "description": "文档中必须包含明确的'安装与兼容性'或'Installation'小标题及环境要求说明。"
+        },
+        {
+          "name": "contains_usage",
+          "description": "文档中必须包含'快速开始'小标题及极简代码示例。"
+        },
+        {
+          "name": "contains_options",
+          "description": "文档中必须包含'核心选项'相关的表格或列表。"
+        },
+        {
+          "name": "contains_architecture",
+          "description": "文档中必须包含'架构浅析'相关内容，梳理底层执行流。"
+        },
+        {
+          "name": "contains_troubleshooting",
+          "description": "文档中必须包含'常见排错'相关内容，列举常见报错和解决办法。"
+        },
+        {
+          "name": "contains_examples",
+          "description": "文档中必须包含'实战示例'相关内容，展示真实业务场景代码。"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "帮我整理一份 Nginx 配置反向代理和负载均衡的教程，之前总是配错 502，想要一份拿来就能用的，要有坑点提示。",
+      "expected_output": "一篇技术文档，包含清晰的安装/使用/选项/架构/排错/示例，Nginx 配置必须有高亮和详细的代码注释，语气是资深工程师指导新手，保存为 markdown 文件。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "contains_installation",
+          "description": "文档中必须包含明确的'安装与兼容性'或'Installation'小标题及环境要求说明。"
+        },
+        {
+          "name": "contains_usage",
+          "description": "文档中必须包含'快速开始'小标题及极简代码示例。"
+        },
+        {
+          "name": "contains_options",
+          "description": "文档中必须包含'核心选项'相关的表格或列表。"
+        },
+        {
+          "name": "contains_architecture",
+          "description": "文档中必须包含'架构浅析'相关内容，梳理底层执行流。"
+        },
+        {
+          "name": "contains_troubleshooting",
+          "description": "文档中必须包含'常见排错'相关内容，必须提到 502 错误及其解决办法。"
+        },
+        {
+          "name": "contains_examples",
+          "description": "文档中必须包含'实战示例'相关内容，展示真实业务场景代码。"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "这是我的一个小开源库的初稿介绍：'这是一个用 Python 写的脚本，可以把目录下的图片批量压缩并转换成 WebP 格式。运行 main.py -d 目录 就可以了。' 请帮我润色成专业的 README 文档。",
+      "expected_output": "将非常简陋的初稿扩写成结构完整（包含架构浅析和排错等六大模块）的专业级开源项目 README，保存为 markdown 文件。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "contains_installation",
+          "description": "文档中必须包含明确的'安装与兼容性'或'Installation'小标题及环境要求说明。"
+        },
+        {
+          "name": "contains_usage",
+          "description": "文档中必须包含'快速开始'小标题及极简代码示例。"
+        },
+        {
+          "name": "contains_options",
+          "description": "文档中必须包含'核心选项'相关的表格或列表。"
+        },
+        {
+          "name": "contains_architecture",
+          "description": "文档中必须包含'架构浅析'相关内容，梳理底层执行流。"
+        },
+        {
+          "name": "contains_troubleshooting",
+          "description": "文档中必须包含'常见排错'相关内容，列举常见报错和解决办法。"
+        },
+        {
+          "name": "contains_examples",
+          "description": "文档中必须包含'实战示例'相关内容，展示真实业务场景代码。"
+        }
+      ]
+    }
+  ]
+}
