@@ -1,0 +1,40 @@
+{
+  "skill_name": "auto-code-engineer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "简单API接口开发",
+      "prompt": "帮我开发一个用户管理的REST API，包含用户的增删改查功能，使用FastAPI框架，数据存储到SQLite数据库",
+      "expected_output": "生成完整的FastAPI应用代码，包含用户模型、API路由、数据库操作、单元测试用例（使用pytest），代码符合FastAPI最佳实践，测试覆盖率≥80%",
+      "tech_stack": ["Python", "FastAPI", "SQLite", "pytest"]
+    },
+    {
+      "id": 2,
+      "name": "Bug修复",
+      "prompt": "我有一个Python函数用于计算订单总价，但是当商品数量为0时会出现除零错误，帮我修复这个问题：\n```python\ndef calculate_total_price(price, quantity, discount):\n    total = price * quantity\n    discounted = total * (1 - discount / 100)\n    return discounted / quantity\n```",
+      "expected_output": "修复后的函数代码，包含边界条件处理，生成对应的单元测试用例，验证各种边界情况（数量为0、折扣为0、折扣为100等）",
+      "tech_stack": ["Python", "pytest"]
+    },
+    {
+      "id": 3,
+      "name": "React组件开发",
+      "prompt": "帮我开发一个用户登录表单的React组件，包含邮箱、密码输入框，登录按钮，表单验证，错误提示功能，使用TypeScript和Tailwind CSS",
+      "expected_output": "完整的React组件代码（TypeScript），包含表单验证逻辑，样式使用Tailwind CSS，生成对应的单元测试用例（使用Jest和React Testing Library）",
+      "tech_stack": ["TypeScript", "React", "Tailwind CSS", "Jest"]
+    },
+    {
+      "id": 4,
+      "name": "代码优化",
+      "prompt": "帮我优化这个Python函数，它现在的性能很差，处理10万条数据需要10秒钟：\n```python\ndef process_data(data):\n    result = []\n    for item in data:\n        if item['status'] == 'active':\n            item['score'] = calculate_score(item)\n            result.append(item)\n    return sorted(result, key=lambda x: x['score'], reverse=True)\n```",
+      "expected_output": "优化后的代码，性能有明显提升，生成对应的单元测试用例验证优化前后功能一致，包含性能对比说明",
+      "tech_stack": ["Python", "pytest"]
+    },
+    {
+      "id": 5,
+      "name": "代码评审",
+      "prompt": "帮我评审这段Python代码，指出存在的问题和改进建议：\n```python\nimport requests\n\ndef get_user_data(user_id):\n    response = requests.get(f'https://api.example.com/users/{user_id}')\n    return response.json()\n```",
+      "expected_output": "详细的代码评审报告，包含安全问题、错误处理、性能、可维护性等方面的问题和改进建议，提供优化后的代码示例",
+      "tech_stack": ["Python"]
+    }
+  ]
+}
