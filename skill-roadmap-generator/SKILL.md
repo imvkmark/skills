@@ -1,5 +1,5 @@
 ---
-name: program-get-started
+name: skill-roadmap-generator
 description: 多 agent 协作的多编程语言知识点学习内容自动化生成系统。当用户需要学习任意编程语言知识点、生成学习计划、编写测试用例、创建学习文档、制定学习路线、生成面试题时必须使用此技能。支持 Java、Python、Go、PHP 等多种编程语言，包含知识点清单生成、完整性评审、学习文档编写、单元测试生成、测试用例评审、迭代式生成的全流程自动化，支持多 agent 并行执行提高生成效率。
 compatibility: 支持多种编程语言，对应语言的构建工具
 ---
