@@ -1,5 +1,5 @@
 ---
-name: weiran-general-code-architecture-analyzer
+name: codebase-analyzer
 description: 用于扫描项目代码，自动生成代码架构分析、业务逻辑梳理、冗余问题检测、设计优化建议以及遗漏点识别。当用户需要分析项目架构、检查代码质量、找出设计缺陷或优化系统结构时使用此技能，即使没有明确提到"架构分析"，只要用户需要了解项目结构、排查设计问题、优化代码结构都应该触发。
 compatibility:
   - 支持任意编程语言和框架的项目

@@ -1,0 +1,111 @@
+supported_languages:
+  - id: java
+    name: "Java"
+    version: "8+"
+    plugin_path: "./language-plugins/java/"
+    file_extension: ".java"
+    build_command: "mvn test"
+    test_framework: "JUnit 5"
+    style_guide: "Oracle Java Coding Conventions"
+    naming_conventions:
+      class: "PascalCase"
+      method: "camelCase"
+      variable: "camelCase"
+      constant: "UPPER_SNAKE_CASE"
+    directory_structure:
+      sources: "src/main/java/"
+      tests: "src/test/java/"
+      docs: "docs/"
+    
+  - id: python
+    name: "Python"
+    version: "3.10+"
+    plugin_path: "./language-plugins/python/"
+    file_extension: ".py"
+    build_command: "pytest"
+    test_framework: "pytest"
+    style_guide: "PEP 8"
+    naming_conventions:
+      class: "PascalCase"
+      function: "snake_case"
+      variable: "snake_case"
+      constant: "UPPER_SNAKE_CASE"
+    directory_structure:
+      sources: "src/"
+      tests: "tests/"
+      docs: "docs/"
+    
+  - id: go
+    name: "Go"
+    version: "1.21+"
+    plugin_path: "./language-plugins/go/"
+    file_extension: ".go"
+    build_command: "go test ./..."
+    test_framework: "built-in testing"
+    style_guide: "Go Official Style Guide"
+    naming_conventions:
+      type: "PascalCase"
+      function: "camelCase (exported PascalCase)"
+      variable: "camelCase"
+      constant: "camelCase"
+    directory_structure:
+      sources: "./"
+      tests: "./"
+      docs: "docs/"
+    
+  - id: php
+    name: "PHP"
+    version: "8.0+"
+    plugin_path: "./language-plugins/php/"
+    file_extension: ".php"
+    build_command: "./vendor/bin/phpunit"
+    test_framework: "PHPUnit"
+    style_guide: "PSR-12"
+    naming_conventions:
+      class: "PascalCase"
+      method: "camelCase"
+      variable: "snake_case"
+      constant: "UPPER_SNAKE_CASE"
+    directory_structure:
+      sources: "src/"
+      tests: "tests/"
+      docs: "docs/"
+
+learning_paths:
+  complete:
+    name: "从入门到大师"
+    description: "完整的学习路径，覆盖从基础到高级的所有知识点"
+    phases:
+      - 基础语法
+      - 核心概念
+      - 高级特性
+      - 生态系统
+      - 最佳实践
+      - 性能优化
+      - 架构设计
+      - 面试准备
+    
+  basic:
+    name: "基础入门"
+    description: "快速入门，掌握核心基础语法和概念"
+    phases:
+      - 基础语法
+      - 核心概念
+      - 简单实战
+    
+  advanced:
+    name: "高级进阶"
+    description: "针对有基础的学习者，深入学习高级特性和最佳实践"
+    phases:
+      - 高级特性
+      - 性能优化
+      - 架构设计
+    
+  interview:
+    name: "面试突击"
+    description: "面试准备，重点覆盖高频考点和实战问题"
+    phases:
+      - 核心知识点
+      - 高频考点
+      - 实战问题
+      - 系统设计
