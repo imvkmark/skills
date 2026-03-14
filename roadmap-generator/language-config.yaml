@@ -16,7 +16,7 @@ supported_languages:
       sources: "src/main/java/"
       tests: "src/test/java/"
       docs: "docs/"
-    
+
   - id: python
     name: "Python"
     version: "3.10+"
@@ -34,7 +34,7 @@ supported_languages:
       sources: "src/"
       tests: "tests/"
       docs: "docs/"
-    
+
   - id: go
     name: "Go"
     version: "1.21+"
@@ -52,7 +52,7 @@ supported_languages:
       sources: "./"
       tests: "./"
       docs: "docs/"
-    
+
   - id: php
     name: "PHP"
     version: "8.0+"
@@ -71,6 +71,14 @@ supported_languages:
       tests: "tests/"
       docs: "docs/"
 
+# 全局配置
+global_config:
+  output_dir: "./learning/"
+  parallel_agents: 3
+  auto_execution: false
+  task_timeout_minutes: 10
+  max_retries: 2
+
 learning_paths:
   complete:
     name: "从入门到大师"
@@ -84,7 +92,7 @@ learning_paths:
       - 性能优化
       - 架构设计
       - 面试准备
-    
+
   basic:
     name: "基础入门"
     description: "快速入门，掌握核心基础语法和概念"
@@ -92,7 +100,7 @@ learning_paths:
       - 基础语法
       - 核心概念
       - 简单实战
-    
+
   advanced:
     name: "高级进阶"
     description: "针对有基础的学习者，深入学习高级特性和最佳实践"
@@ -100,7 +108,7 @@ learning_paths:
       - 高级特性
       - 性能优化
       - 架构设计
-    
+
   interview:
     name: "面试突击"
     description: "面试准备，重点覆盖高频考点和实战问题"

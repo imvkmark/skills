@@ -23,11 +23,14 @@ compatibility: 支持多种编程语言，对应语言的构建工具
 - 可扩展支持其他语言
 
 ## 配置选项
-- `output-dir: ./learning/` - 用于存储学习计划和输出文档的默认目录
+所有配置通过 `language-config.yaml` 统一管理：
+- `output-dir: ./learning/` - 用于存储学习计划和输出文档的默认目录（可在运行时通过参数覆盖）
 - `parallel-agents: 3` - 并行执行任务的子 agent 数量
 - `auto-execution: disabled` - 是否自动执行计划（默认需要用户确认）
 - `target-language: java` - 目标编程语言，可选值：java, python, go, php
 - `learning-path: complete` - 学习路径，可选值：complete (从入门到大师), basic (基础), advanced (高级), interview (面试突击)
+
+> 配置优先级：运行时参数 > 环境变量 > language-config.yaml 默认值
 
 ## 模式 1：规划模式（新建或更新学习计划时）
 当用户要求创建学习计划、更新计划，或者要求生成学习内容但输出目录下尚未存在计划文件时，进入此模式。
@@ -53,45 +56,87 @@ compatibility: 支持多种编程语言，对应语言的构建工具
 - 参考对应语言插件中的标准阶段划分模板
 
 ### 步骤 1.3：生成计划文件
-在输出目录中创建两个核心计划文件：
-1. **学习计划主体**：`@output/plan-learning.md`
+在输出目录中创建两个核心计划文件（输出目录可通过 `output-dir` 配置或环境变量 `LEARNING_OUTPUT_DIR` 覆盖）：
+1. **学习计划主体**：`{output-dir}/plan-learning.md`
    - 完整的知识点清单，分阶段组织
    - 每个知识点的难度、预计学习时间、学习目标
    - 文档编写规范和输出格式要求
    
-2. **进度追踪文件**：`@output/plan-progress.md`
+2. **进度追踪文件**：`{output-dir}/plan-progress.md`
    必须包含以下 Metadata 部分：
    ```markdown
    ## Metadata
    - Plan ID: [唯一生成的ID]
    - Target Language: [目标编程语言]
    - Learning Path: [学习路径类型]
+   - Learning Path Level: [full (5级) / simple (3级)]
+   - Version: 1
+   - Created: [创建时间]
    - Last updated: [时间戳]
-   - Status: 待确认
+   - Status: 待确认 / 待执行 / 执行中 / 已完成
    - Current phase: [当前执行的阶段编号]
    - Last completed task: [None]
    - Auto-execution: disabled
    - Parallel agents: 3
    - Adjustment requests: []
+   - Change history: []
    ```
    
-   必须包含进度追踪表格：
+   动态层级进度追踪表格：
+   - **5级结构**（完整）：阶段 | 模块 | 章节 | 知识点 | 子知识点 | 状态 | 完成度 | 负责人 | 备注
+   - **3级结构**（入门）：阶段 | 知识点 | 状态 | 完成度 | 负责人 | 备注
+   
+   > 灵活适配：根据 `learning-path` 自动选择表格层级。入门学习使用 3 级结构，完整/高级/面试使用 5 级结构。
+   
+   **版本管理**：每次重要修改都记录到 `Change history`：
    ```markdown
-   | 阶段 | 模块 | 章节 | 知识点 | 子知识点 | 状态 | 完成度 | 负责人 | 备注 |
-   |------|------|------|--------|----------|------|--------|--------|------|
-   | 第1阶段：[语言]基础 | 基础语法与核心概念 | 基础语法与数据类型 | 数据类型分类 | 基本数据类型 | 待执行 | 0% | agent-1 | |
-   | 第1阶段：[语言]基础 | 基础语法与核心概念 | 基础语法与数据类型 | 数据类型分类 | 引用数据类型 | 待执行 | 0% | agent-2 | |
+   - [时间] [操作类型]: [变更内容] (by [操作者])
    ```
-   > 灵活适配：简单知识点可合并部分列，保持表格简洁。
 
-**关键要求**：完成规划后，必须先向用户总结计划并请求确认，绝对禁止自动跳转执行。用户确认后将状态更新为「待执行」。
+**关键要求**：完成规划后，必须先向用户展示计划摘要并请求确认。使用以下标准确认提示：
+
+```markdown
+## 学习计划已生成
+
+**目标语言**: [语言名称]
+**学习路径**: [路径类型]
+**知识点总数**: [数量] 个
+**预计完成时间**: [X] 小时
+
+### 计划摘要
+- 第1阶段：[阶段名称] ([知识点数] 个知识点)
+- 第2阶段：[阶段名称] ([知识点数] 个知识点)
+- ...
+
+### 当前状态
+- 表格层级：[5级/3级]
+- 版本：v[版本号]
+
+---
+**请确认是否开始执行？**
+- [ ] 确认执行
+- [ ] 调整部分内容（请说明需要修改的部分）
+- [ ] 重新规划
+```
+
+用户确认后，将 Metadata 中的 `Status` 从「待确认」更新为「待执行」。
 
 ## 模式 2：执行模式（生成学习内容时）
-此模式要求输出目录下必须存在已建好的计划文件：
-- `@output/plan-learning.md` - 学习计划主体
-- `@output/plan-progress.md` - 进度追踪文件
+此模式要求输出目录下必须存在已建好的计划文件（输出目录由 `output-dir` 配置或环境变量 `LEARNING_OUTPUT_DIR` 决定）：
+- `{output-dir}/plan-learning.md` - 学习计划主体
+- `{output-dir}/plan-progress.md` - 进度追踪文件
 
 如果这些文件缺失，请立即自动切换回 **模式 1：规划**，先完成计划文件的生成。
+
+### 步骤 2.0：增量更新检测（首次执行）
+在开始执行前，检查是否需要增量更新：
+1. 扫描 `{output-dir}/docs/` 目录，获取已存在的文档列表
+2. 扫描 `{output-dir}/src/test/[语言]/` 目录，获取已存在的测试文件列表
+3. 在 `plan-progress.md` 中标记「待执行」的任务时：
+   - 如果文档和测试文件都已存在 → 跳过该任务（状态标记为「已跳过」）
+   - 如果只有文档或只有测试 → 补充缺失部分
+   - 如果都不存在 → 正常执行
+4. 向用户报告增量更新的结果
 
 ### 步骤 2.1：加载上下文与任务分发
 1. 读取 `plan-learning.md` 和 `plan-progress.md`
@@ -126,6 +171,23 @@ compatibility: 支持多种编程语言，对应语言的构建工具
 - [ ] 测试用例全部可以通过
 - [ ] 内容准确无误，没有概念错误
 
+#### 2.2.4 代码执行验证（必须执行）
+自校验完成后，必须实际运行代码验证：
+1. **编译验证**：使用对应语言的构建命令验证代码可编译
+   - Java: `mvn compile` 或 `javac`
+   - Python: `python -m py_compile` 
+   - Go: `go build`
+   - PHP: `php -l`（语法检查）
+2. **测试执行**：运行单元测试验证
+   - Java: `mvn test`
+   - Python: `pytest`
+   - Go: `go test ./...`
+   - PHP: `./vendor/bin/phpunit`
+3. **验证结果处理**：
+   - 如果编译失败 → 修复代码错误后重新验证
+   - 如果测试失败 → 修复测试或代码后重新验证
+   - 只有编译和测试都通过才算验证完成
+
 ### 步骤 2.3：结果汇总与质量检查
 主 agent 收集所有子 agent 的输出结果，进行统一质量检查：
 1. **格式检查**：所有文档和测试文件符合统一的格式规范
@@ -154,9 +216,9 @@ compatibility: 支持多种编程语言，对应语言的构建工具
 - 复杂知识点分配给经验更丰富的 agent（通过调整 prompt 实现）
 
 ### 结果汇总规范
-- 所有文档统一保存到 `@output/docs/` 目录，文件名：`[知识点名称].md`
-- 所有测试用例统一保存到 `@output/src/test/[语言]/` 目录，文件名遵循对应语言规范
-- 所有代码示例统一保存到 `@output/src/main/[语言]/` 目录，文件名遵循对应语言规范
+- 所有文档统一保存到 `{output-dir}/docs/` 目录，文件名：`[知识点名称].md`
+- 所有测试用例统一保存到 `{output-dir}/src/test/[语言]/` 目录，文件名遵循对应语言规范
+- 所有代码示例统一保存到 `{output-dir}/src/main/[语言]/` 目录，文件名遵循对应语言规范
 
 ### 冲突解决机制
 - 如果多个 agent 的输出存在内容冲突，由主 agent 进行仲裁
@@ -173,15 +235,66 @@ compatibility: 支持多种编程语言，对应语言的构建工具
 - [ ] 包含足够的实际案例和最佳实践
 - [ ] 进度追踪文件已全部更新完毕
 
+## 错误处理与恢复机制
+### 任务失败处理
+当子 agent 执行任务失败时，按以下流程处理：
+
+1. **失败检测**：
+   - 子 agent 报告执行状态为「失败」
+   - 代码编译/测试执行返回非零退出码
+   - 任务超时（默认 10 分钟）
+
+2. **重试策略**（最多 2 次）：
+   - 第 1 次失败：记录失败原因，重新分配任务
+   - 第 2 次失败：更换执行 agent 或简化任务粒度
+   - 第 3 次失败：将任务标记为「阻塞」，记录到 `Adjustment requests`
+
+3. **失败上报**：
+   任务失败时，向用户报告：
+   ```markdown
+   ## 任务执行受阻
+   
+   **受阻任务**: [知识点名称]
+   **失败原因**: [具体错误信息]
+   **已尝试次数**: X/3
+   
+   **建议处理方式**:
+   - [ ] 跳过此知识点，继续其他任务
+   - [ ] 简化任务范围后重试
+   - [ ] 手动处理后继续
+   ```
+
+### 进度可视化
+在执行过程中，可以通过以下方式展示进度：
+```markdown
+## 当前进度
+
+[████████████░░░░░░░░░░░░░] 50% (5/10 个知识点)
+- ✅ 已完成: 知识点A, 知识点B, 知识点C, 知识点D, 知识点E
+- 🔄 进行中: 知识点F
+- ⏳ 待执行: 知识点G, 知识点H, 知识点I, 知识点J
+- ❌ 已失败: 0
+```
+
+### 中断恢复
+如果执行过程中断：
+1. 读取当前的 `plan-progress.md` 状态
+2. 从「待执行」或「进行中」的任务继续
+3. 不重复执行已完成的任务
+
 ## 工具使用指南
 ### 并行执行优化
 当需要生成多个知识点内容时，必须在同一次回复中**并发（Parallel）**触发多个子 agent 任务，以此达到最高的性能表现：
+
 ```typescript
 // 示例：并行触发3个子agent任务
-task(subagent_type="deep", run_in_background=true, load_skills=[], description="生成Python集合框架文档", prompt="...")
-task(subagent_type="deep", run_in_background=true, load_skills=[], description="生成Go并发编程文档", prompt="...")
-task(subagent_type="deep", run_in_background=true, load_skills=[], description="生成PHP面向对象文档", prompt="...")
+// 注意：必须使用 category 参数，不能使用 subagent_type
+task(category="deep", load_skills=[], run_in_background=true, description="生成Python集合框架文档", prompt="...")
+task(category="deep", load_skills=[], run_in_background=true, description="生成Go并发编程文档", prompt="...")
+task(category="deep", load_skills=[], run_in_background=true, description="生成PHP面向对象文档", prompt="...")
 ```
+
+> **重要**：必须使用 `category` 参数指定 agent 类型。可选值：`deep`（深度执行）、`ultrabrain`（复杂逻辑）、`quick`（简单任务）。`load_skills` 根据任务领域选择合适的技能。
 
 ### 结果收集
 使用 `background_output` 工具收集并行执行的子 agent 结果，不要同步等待任务完成。
