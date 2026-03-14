@@ -1,0 +1,42 @@
+{
+  "roles": {
+    "PM": {
+      "name": "产品经理",
+      "code": "PM",
+      "file": "product-manager.md"
+    },
+    "UI": {
+      "name": "UI设计师",
+      "code": "UI",
+      "file": "ui-designer.md"
+    },
+    "ARCH": {
+      "name": "架构师",
+      "code": "ARCH",
+      "file": "architect.md"
+    },
+    "DEV": {
+      "name": "开发工程师",
+      "code": "DEV",
+      "file": "developer.md"
+    },
+    "QA": {
+      "name": "质量工程师",
+      "code": "QA",
+      "file": "qa-engineer.md"
+    }
+  },
+  "workflows": {
+    "需求评审": "requirement-review.md",
+    "技术设计": "technical-design.md",
+    "发布流程": "release-process.md"
+  },
+  "rolePaths": [
+    "role-hub/roles",
+    "~/.claude/skills/role-hub/roles"
+  ],
+  "workflowPaths": [
+    "role-hub/workflows",
+    "~/.claude/skills/role-hub/workflows"
+  ]
+}
