@@ -1,0 +1,82 @@
+[
+  {
+    "query": "我想学习 Java，从入门到精通。请帮我制定一个完整的学习计划。",
+    "should_trigger": true
+  },
+  {
+    "query": "我要准备 Python 面试，请生成一个面试突击学习计划。",
+    "should_trigger": true
+  },
+  {
+    "query": "我已经掌握了 Go 的基础，想深入学习并发编程。请生成高级进阶计划。",
+    "should_trigger": true
+  },
+  {
+    "query": "生成 PHP 的学习路线，包括知识点清单和测试用例。",
+    "should_trigger": true
+  },
+  {
+    "query": "我需要系统化地学习 Java 的集合框架，包括文档、代码示例和单元测试。",
+    "should_trigger": true
+  },
+  {
+    "query": "为我创建一个 Python 数据分析的学习计划，包含所有知识点。",
+    "should_trigger": true
+  },
+  {
+    "query": "我想学习 Go 的 goroutine 和 channel，请生成完整的学习内容。",
+    "should_trigger": true
+  },
+  {
+    "query": "生成 Laravel 框架的学习文档和测试用例。",
+    "should_trigger": true
+  },
+  {
+    "query": "我需要一个 Java 多线程编程的学习路线，包括面试题。",
+    "should_trigger": true
+  },
+  {
+    "query": "为我的团队生成 Python 最佳实践的学习计划。",
+    "should_trigger": true
+  },
+  {
+    "query": "我想写一个 Python 脚本来处理 CSV 文件。",
+    "should_trigger": false
+  },
+  {
+    "query": "如何在 Java 中使用 HashMap？",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我调试这个 Go 程序的 bug。",
+    "should_trigger": false
+  },
+  {
+    "query": "我需要一个 PHP 的 REST API 实现。",
+    "should_trigger": false
+  },
+  {
+    "query": "生成一个 Python 项目的代码审查报告。",
+    "should_trigger": false
+  },
+  {
+    "query": "我想学习编程语言的知识点，请帮我制定学习计划并生成学习文档。",
+    "should_trigger": true
+  },
+  {
+    "query": "为我生成 Java 8 新特性的完整学习内容，包括 Lambda、Stream 等。",
+    "should_trigger": true
+  },
+  {
+    "query": "我需要 Python 异步编程的学习路线和测试用例。",
+    "should_trigger": true
+  },
+  {
+    "query": "生成 Go 微服务架构的学习计划和代码示例。",
+    "should_trigger": true
+  },
+  {
+    "query": "我想学习 PHP 的设计模式，请生成学习文档和实现示例。",
+    "should_trigger": true
+  }
+]

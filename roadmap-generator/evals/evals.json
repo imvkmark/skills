@@ -1,0 +1,263 @@
+{
+  "skill_name": "roadmap-generator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "plan-java-complete",
+      "prompt": "我想学习 Java，从入门到精通。请帮我制定一个完整的学习计划。",
+      "expected_output": "生成 plan-learning.md 和 plan-progress.md，包含 8 个阶段的完整学习计划",
+      "files": [],
+      "assertions": [
+        {
+          "name": "has_plan_learning_file",
+          "description": "生成了 plan-learning.md 文件"
+        },
+        {
+          "name": "has_plan_progress_file",
+          "description": "生成了 plan-progress.md 文件"
+        },
+        {
+          "name": "has_8_phases",
+          "description": "学习计划包含 8 个阶段"
+        },
+        {
+          "name": "has_metadata_section",
+          "description": "plan-progress.md 包含完整的 Metadata 部分"
+        },
+        {
+          "name": "has_knowledge_points",
+          "description": "每个阶段都有明确的知识点列表"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "plan-python-interview",
+      "prompt": "我要准备 Python 面试，请生成一个面试突击学习计划。",
+      "expected_output": "生成 4 阶段的面试突击学习计划，重点覆盖高频考点",
+      "files": [],
+      "assertions": [
+        {
+          "name": "has_plan_files",
+          "description": "生成了计划文件"
+        },
+        {
+          "name": "has_4_phases",
+          "description": "面试计划包含 4 个阶段"
+        },
+        {
+          "name": "has_interview_focus",
+          "description": "计划重点覆盖高频面试考点"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "plan-go-advanced",
+      "prompt": "我已经掌握了 Go 的基础，想深入学习并发编程。请生成高级进阶计划。",
+      "expected_output": "生成 3 阶段的高级进阶学习计划，重点学习高级特性",
+      "files": [],
+      "assertions": [
+        {
+          "name": "has_plan_files",
+          "description": "生成了计划文件"
+        },
+        {
+          "name": "has_3_phases",
+          "description": "高级计划包含 3 个阶段"
+        },
+        {
+          "name": "has_advanced_topics",
+          "description": "计划包含并发编程等高级主题"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "execute-java-phase1",
+      "prompt": "开始执行 Java 学习计划的第一阶段，生成基础语法的学习文档、代码示例和单元测试。",
+      "expected_output": "生成学习文档、代码示例、单元测试，更新 plan-progress.md",
+      "files": ["plan-learning.md", "plan-progress.md"],
+      "assertions": [
+        {
+          "name": "has_learning_doc",
+          "description": "生成了学习文档"
+        },
+        {
+          "name": "has_code_examples",
+          "description": "生成了代码示例"
+        },
+        {
+          "name": "has_unit_tests",
+          "description": "生成了单元测试"
+        },
+        {
+          "name": "code_compiles",
+          "description": "生成的 Java 代码可以编译"
+        },
+        {
+          "name": "tests_pass",
+          "description": "单元测试可以通过"
+        },
+        {
+          "name": "progress_updated",
+          "description": "plan-progress.md 已更新"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "execute-python-phase1",
+      "prompt": "执行 Python 学习计划的第一阶段，生成基础语法的完整学习内容。",
+      "expected_output": "生成 Python 学习文档、代码示例、单元测试",
+      "files": ["plan-learning.md", "plan-progress.md"],
+      "assertions": [
+        {
+          "name": "has_learning_doc",
+          "description": "生成了学习文档"
+        },
+        {
+          "name": "has_code_examples",
+          "description": "生成了代码示例"
+        },
+        {
+          "name": "has_unit_tests",
+          "description": "生成了单元测试"
+        },
+        {
+          "name": "code_syntax_valid",
+          "description": "生成的 Python 代码语法有效"
+        },
+        {
+          "name": "tests_pass",
+          "description": "单元测试可以通过"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "execute-go-phase1",
+      "prompt": "执行 Go 学习计划的第一阶段，生成基础语法的学习内容。",
+      "expected_output": "生成 Go 学习文档、代码示例、单元测试",
+      "files": ["plan-learning.md", "plan-progress.md"],
+      "assertions": [
+        {
+          "name": "has_learning_doc",
+          "description": "生成了学习文档"
+        },
+        {
+          "name": "has_code_examples",
+          "description": "生成了代码示例"
+        },
+        {
+          "name": "has_unit_tests",
+          "description": "生成了单元测试"
+        },
+        {
+          "name": "code_compiles",
+          "description": "生成的 Go 代码可以编译"
+        },
+        {
+          "name": "tests_pass",
+          "description": "单元测试可以通过"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "parallel-execution-multiple-topics",
+      "prompt": "并行执行 Java 学习计划的第一阶段，同时生成 3 个知识点（基础语法、面向对象、集合框架）的完整内容。",
+      "expected_output": "3 个知识点的文档、代码、测试同时生成，进度正确更新",
+      "files": ["plan-learning.md", "plan-progress.md"],
+      "assertions": [
+        {
+          "name": "all_topics_generated",
+          "description": "所有 3 个知识点都生成了内容"
+        },
+        {
+          "name": "no_file_conflicts",
+          "description": "没有文件冲突或覆盖"
+        },
+        {
+          "name": "progress_accurate",
+          "description": "进度追踪准确"
+        },
+        {
+          "name": "all_tests_pass",
+          "description": "所有生成的测试都通过"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "incremental-update-detection",
+      "prompt": "继续执行 Java 学习计划的第二阶段。系统应该检测到第一阶段已完成，不重复生成，只生成第二阶段的新内容。",
+      "expected_output": "跳过已完成的第一阶段，生成第二阶段的新内容",
+      "files": ["plan-learning.md", "plan-progress.md"],
+      "assertions": [
+        {
+          "name": "phase1_skipped",
+          "description": "第一阶段被正确跳过"
+        },
+        {
+          "name": "phase2_generated",
+          "description": "第二阶段的内容被生成"
+        },
+        {
+          "name": "no_duplication",
+          "description": "没有重复生成第一阶段的内容"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "error-handling-invalid-language",
+      "prompt": "尝试为不支持的编程语言（Rust）生成学习计划。系统应该如何处理？",
+      "expected_output": "系统应该提示不支持该语言，并列出支持的语言列表",
+      "files": [],
+      "assertions": [
+        {
+          "name": "error_detected",
+          "description": "错误被正确检测"
+        },
+        {
+          "name": "helpful_message",
+          "description": "提供了有帮助的错误信息"
+        },
+        {
+          "name": "supported_languages_listed",
+          "description": "列出了支持的编程语言"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "error-recovery-task-failure",
+      "prompt": "执行学习计划时，某个知识点生成失败。系统应该记录失败原因，标记为阻塞，并提示用户处理方式。",
+      "expected_output": "记录失败原因，标记为阻塞，提供恢复建议",
+      "files": ["plan-learning.md", "plan-progress.md"],
+      "assertions": [
+        {
+          "name": "failure_detected",
+          "description": "失败被正确检测"
+        },
+        {
+          "name": "error_logged",
+          "description": "错误信息被记录"
+        },
+        {
+          "name": "task_marked_blocked",
+          "description": "任务被标记为阻塞"
+        },
+        {
+          "name": "recovery_suggestions",
+          "description": "提供了恢复建议"
+        },
+        {
+          "name": "progress_updated",
+          "description": "进度文件被正确更新"
+        }
+      ]
+    }
+  ]
+}
