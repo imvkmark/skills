@@ -111,10 +111,18 @@
 ### Mixed transport
 - 同一字段是否支持 body / file / base64 多模式
 - 是否误简化为单一 requestBody
+- 如果同一字段既支持 `file()` 又支持 `input()`，是否已明确标记为 `mixed transport`
+- 是否评估过该接口应继续文档化、拆成多个场景，还是直接停止并人工确认
 
 ### Multipart + scalar
 - 除文件外，是否还有关键标量字段
 - 是否一起进入 schema 设计
+
+### Alternate response envelopes
+- 是否存在普通 `Resp::success(...)` 之外的专用响应结构
+- 是否存在编辑器、自定义客户端或第三方协议专用 JSON 包裹
+- 是否记录了每种响应结构的触发条件
+- 如果无法用一个稳定 schema 准确覆盖，是否停止并人工确认
 
 ### 多成功响应
 - 是否存在不同 success envelope
@@ -138,6 +146,25 @@
 4. Request / Response 发现结果
 5. 拟生成草稿
 6. 风险与未确认项
+
+## 高风险上传接口默认决策
+
+如果一个上传接口同时满足以下任一条件：
+
+- 同一字段既可能来自 `file()`，也可能来自 `input()`
+- 通过显式分支支持 `form` / `base64` / 其他多输入模式
+- 存在普通成功响应之外的编辑器或协议专用 JSON 响应
+
+则默认不要把它视为“普通 multipart 接口”。
+
+复核时必须确认：
+
+- 是否已明确标记为 `mixed transport`
+- 是否已明确标记存在 `alternate response envelopes`
+- 是否错误地 fallback 到 `BaseResponseBody`
+- 是否只能通过忽略某个分支，才能勉强拼出统一文档
+
+如果以上任一问题无法被稳定解决，默认结论应为：停止并人工确认，而不是继续自动生成最终 OpenAPI 文档。
 
 ## OpenAPI 工具链建议
 
