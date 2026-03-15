@@ -1,6 +1,6 @@
 ---
 name: weiran-project-qa-analysis
-description: 用于 Weiran Framework / Laravel 10 + PHP 8.2 项目的系统化质量分析。覆盖代码质量、单元测试和系统架构三个维度，适合在用户希望评审项目质量、检查代码规范、评估测试现状、梳理架构风险或制定整改计划时使用。遇到模块化 Laravel / Weiran 项目、目录结构不完全标准、测试分散在各扫描根下的 `*/tests` 目录时，也应优先使用本技能。
+description: 用于 Weiran Framework / Laravel 10 + PHP 8.2 项目的系统化项目级质量分析。覆盖代码质量、单元测试和系统架构三个维度，适合在用户希望评审项目质量、检查代码规范、评估测试现状、梳理架构风险或制定整改计划时使用。对 API 文档问题，本技能只做风险识别与候选接口提示，不做 OpenAPI / Swagger 的正式建模、OA Attributes 生成或接口级精审；只要任务主目标是项目质量总评、测试与架构分析，尤其是模块化 Laravel / Weiran 项目、目录结构不完全标准、测试分散在各扫描根下的 `*/tests` 目录时，应优先使用本技能。
 ---
 
 # Weiran Project QA Analysis Skill
@@ -49,6 +49,8 @@ scoring_profile: references/scoring.md
 - 使用搜索工具检查 `strict_types`、调试函数、命名规范、命名空间和路由定义约定
 - 将 `strict_types`、PHPStan、Pint 视为目标值或成熟度信号，不默认视为阻断项
 - 将 i18n 缺失视为 warning，而不是失败结论
+- 可选识别 API 控制器的接口文档风险，例如缺少 OpenAPI Attributes、接口文档与 route / Request / Response 明显不一致
+- 上述检查仅用于风险识别，不做正式 OpenAPI 契约建模、OA Attributes 生成或接口级精审
 - 输出按风险分层的发现：`high` / `medium` / `low`
 
 #### 维度 B: 单元测试
@@ -79,7 +81,7 @@ scoring_profile: references/scoring.md
 ## 规则与约束
 1. 所有结论都必须引用具体文件，必要时附上行号
 2. 不要猜测不存在的配置；若关键配置缺失，明确写成“缺少证据”或“配置缺失”
-3. 本技能不负责 OpenAPI / Swagger 审查；如果用户要求接口文档审查，应切换到专门技能
+3. 本技能仅负责接口文档风险识别，不负责 OpenAPI / Swagger 的正式建模、OA Attributes 生成或接口级精审；如果用户要求接口文档补全或深入审查，应切换到 `weiran-openapi-writer`
 4. 对大型仓库优先使用 `Glob` / `Grep` / AST 搜索，避免整文件无差别读取
 5. 风险分层优先于硬门槛：即使发现问题，也先判断其影响范围与修复优先级
 
@@ -106,6 +108,7 @@ scoring_profile: references/scoring.md
 3. 每个维度的风险分层发现
 4. 可执行的整改建议
 5. 优先级排序后的行动清单
+6. 如发现接口文档风险，可附加 `API 文档风险` 小节，列出候选接口、证据文件、风险类型，以及建议转交 `weiran-openapi-writer`
 
 ## 什么时候需要补充说明
 - 当 `phpunit.xml` 与真实测试分布不一致时，明确区分“配置声明的测试范围”和“仓库实际存在的测试文件”
