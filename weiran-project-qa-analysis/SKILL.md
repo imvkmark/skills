@@ -1,171 +1,113 @@
 ---
 name: weiran-project-qa-analysis
-description: 用于 Weiran Framework (Laravel 10.x + PHP 8.2) 项目的系统化质量分析。覆盖代码质量、单元测试、API文档和系统架构四个维度，确保项目符合最佳实践规范。当用户需要分析项目质量、检查代码规范、评估测试覆盖率或优化架构时，应使用此技能。
+description: 用于 Weiran Framework / Laravel 10 + PHP 8.2 项目的系统化质量分析。覆盖代码质量、单元测试和系统架构三个维度，适合在用户希望评审项目质量、检查代码规范、评估测试现状、梳理架构风险或制定整改计划时使用。遇到模块化 Laravel / Weiran 项目、目录结构不完全标准、测试分散在各扫描根下的 `*/tests` 目录时，也应优先使用本技能。
 ---
 
 # Weiran Project QA Analysis Skill
 
 ## 角色与目标
-您是 Weiran Framework 的**高级架构师和质量保证专家**。您的职责是在四个维度上强制执行严格的工程标准：代码质量、单元测试、API文档和系统架构。您需要识别违规行为、评估风险，并提供可操作的整改计划。
+您是 Weiran Framework 的质量分析顾问。您的职责不是做教条式的“一票否决”，而是基于证据识别代码质量、测试质量和架构风险，输出可以落地的整改建议。
 
-## 🎯 核心目标
-1.  **强制合规性**: 验证项目是否符合 Weiran/Laravel 标准
-2.  **确保稳定性**: 验证测试覆盖范围和质量
-3.  **标准化接口**: 审计 OpenAPI/Swagger 文档
-4.  **优化设计**: 评估架构模式和可维护性
+## 核心目标
+1. 评估业务模块的代码质量基线
+2. 识别测试发现、测试有效性与测试风险
+3. 评估模块架构的可维护性与耦合风险
+4. 生成结构化 QA 报告，支持 dry-run 或写入指定路径
 
-## 🔄 分析工作流程
+## 输入约定
+在开始分析前，先从用户消息或仓库现状中确认以下配置；如果用户未提供，就在报告中写明采用的默认值。
+
+```yaml
+scan_roots:
+  - modules
+exclude_paths:
+  - vendor
+  - node_modules
+  - storage
+report_output: null   # null = 仅输出草稿，不写文件
+scoring_profile: references/scoring.md
+```
+
+- `scan_roots`: 允许一个或多个扫描根目录；默认聚焦业务模块目录，不把已安装依赖包视为分析主体。
+- `report_output`: 若为空，先输出草稿；若给出路径，再落盘。
+- `scoring_profile`: 始终从外部评分配置读取，不要在本文件中重写分值。
+
+## 工作流程
 
 ### 阶段 1: 初始化与发现
-1.  **加载规范文档**:
-    -   读取 `references/specs-qa.md` (质量标准)
-    -   读取 `references/specs-testing.md` (测试标准)
-    -   读取 `references/specs-apidoc.md` (API文档标准)
-    -   **操作**: 使用 `Read` 工具加载这些文件
-2.  **映射项目结构**:
-    -   识别 `modules/` 和 `weiran/` 目录中的活跃模块
-    -   **操作**: 使用 `Glob` 工具列出模块目录
-3.  **检查配置文件**:
-    -   验证 `composer.json` 和 `phpstan.neon` (如果存在) 的配置
-    -   **操作**: 使用 `Read` 工具读取这些配置文件
+1. 读取 `references/specs-qa.md`、`references/specs-testing.md`、`references/scoring.md`、`references/document-structure.md`
+2. 根据 `scan_roots` 构建扫描范围，列出活跃模块目录与关键配置文件
+3. 读取根目录 `composer.json`、`phpunit.xml`、`phpstan.neon` 或同类静态分析配置（如果存在）
+4. 明确排除目录：`vendor/`、`node_modules/`、缓存和构建产物
 
-### 阶段 2: 维度分析 (按顺序执行)
+### 阶段 2: 维度分析
 
-#### 维度 A: 项目质量 (QA)
-*参考: specs-qa.md*
--   **结构检查**: 验证模块目录布局是否符合标准结构
--   **代码规范**:
-    -   使用 `Grep` 确保 PHP 文件中存在 `declare(strict_types = 1);`
-    -   使用 `Grep` 查找禁止使用的调试函数: `dd(`, `dump(`, `var_dump(`, `print_r(`
-    -   检查是否符合 PSR-12 编码标准
--   **命名规范**: 验证类名(PascalCase)和方法/变量(camelCase)的命名
--   **国际化**: 检查验证文件的语言一致性(zh/en)
--   **静态分析**: 检查 PHPStan 配置是否存在且配置正确
+#### 维度 A: 代码质量
+*参考: `references/specs-qa.md`*
+
+- 检查模块目录结构是否完整，重点关注 `src/`、`tests/`、`configurations/`、`resources/`
+- 使用搜索工具检查 `strict_types`、调试函数、命名规范、命名空间和路由定义约定
+- 将 `strict_types`、PHPStan、Pint 视为目标值或成熟度信号，不默认视为阻断项
+- 将 i18n 缺失视为 warning，而不是失败结论
+- 输出按风险分层的发现：`high` / `medium` / `low`
 
 #### 维度 B: 单元测试
-*参考: specs-testing.md*
--   **基础设施**: 检查 `phpunit.xml` 配置是否有适当的设置(进程隔离、风险失败)
--   **覆盖率**:
-    -   识别与 `src/` 结构镜像的 `tests/` 目录
-    -   计算粗略覆盖率或读取现有覆盖率报告
-    -   检查 `php-coverage` 是否配置
--   **质量**:
-    -   验证测试方法中的 AAA (Arrange-Act-Assert) 模式
-    -   检查是否使用 `Faker` 进行数据生成
-    -   确保测试遵循严格的命名规范
+*参考: `references/specs-testing.md`*
 
-#### 维度 C: API 文档
-*参考: specs-apidoc.md*
--   **覆盖率**: 扫描 `Http/Controllers` 中的 `#[OA\...]` 属性
--   **合规性**:
-    -   **路径**: 必须与路由定义匹配
-    -   **请求**: 必须使用 `{Function}Request` 类并带有 `#[OA\Schema]`
-    -   **响应**: 必须使用 `{Function}ResponseBody` 类并继承 `BaseResponseBody`
-    -   **版本控制**: 检查 API 版本控制合规性
--   **工具**: 使用 `Grep` 和 `SearchCodebase` 关联控制器与其请求/响应类
+- 先解析根目录 `phpunit.xml`，提取 testsuite、source、coverage 等配置
+- 再基于 `scan_roots` 补扫 `{scan_root}/*/tests/**/*Test.php`，识别未被 `phpunit.xml` 显式覆盖的测试资产
+- 检查测试文件命名、继承基类、断言存在性、调试残留、被注释掉的测试入口
+- 将“目录是否严格镜像 `src/`”降级为建议项，不作为强制失败条件
+- 按风险分层评估测试问题：
+  - `high`: 无断言、`dd()/dump()`、注释掉的测试入口、明显不可执行
+  - `medium`: 继承基类不统一、结构偏移、覆盖率配置过窄
+  - `low`: AAA 不明显、未使用 Faker、命名不够清晰
 
-#### 维度 D: 架构
--   **模式**: 识别 Repository、Policy、Action 和 Service 模式的使用
--   **解耦**: 评估依赖注入和事件驱动的实现
--   **评估**: 评估可用性、可扩展性、可维护性和性能
--   **耦合**: 检查模块间是否存在循环依赖或紧耦合
+#### 维度 C: 架构
+- 仅分析业务代码范围，不把 `vendor/weiran/*` 等安装包纳入架构评估主体
+- 识别 Action、Service、Policy、Repository、Job、Event 等模式的使用情况
+- 评估模块边界、依赖方向、耦合关系、扩展性与可维护性
+- 对“现状可接受但中长期有风险”的问题标记为 `medium` 或 `low`，避免一律升级为阻断结论
 
 ### 阶段 3: 报告生成
-1.  **综合调查结果**: 按维度和优先级(高/中/低)对问题进行分组
-2.  **计算分数**: 应用规范中定义的评分逻辑
-3.  **草拟报告**:
-    -   目标文件: `docs/spec-{YYYYMMDD}.md` (例如: `docs/spec-20240520.md`)
-    -   结构: 遵循 `references/document-structure.md`
-4.  **编写文件**: 使用 `Write` 工具保存最终报告
-5.  **生成摘要**: 创建执行摘要，突出关键发现和建议
+1. 按 `references/scoring.md` 读取评分维度、权重和风险解释
+2. 按 `references/document-structure.md` 生成报告草稿
+3. 若 `report_output` 为空：仅输出草稿与关键摘要
+4. 若 `report_output` 非空：将最终报告写入指定路径
+5. 在摘要中说明本次使用的扫描范围、排除项和评分配置
 
-## ⚠️ 规则与约束
-1.  **基于证据**: 每个报告的问题必须引用具体的文件和行号(如果适用)
-2.  **建设性**: 为每个问题提供具体的"修复方法"步骤
-3.  **上下文感知**: 区分 `modules`(业务逻辑)和 `weiran`(核心框架)代码；对核心代码应用更严格的规则
-4.  **安全读取**: 不要完全读取大文件；使用 `Grep` 或 `SearchCodebase` 进行高效扫描
-5.  **不猜测**: 如果规范文件缺失，将其报告为严重配置错误，而不是猜测规则
+## 规则与约束
+1. 所有结论都必须引用具体文件，必要时附上行号
+2. 不要猜测不存在的配置；若关键配置缺失，明确写成“缺少证据”或“配置缺失”
+3. 本技能不负责 OpenAPI / Swagger 审查；如果用户要求接口文档审查，应切换到专门技能
+4. 对大型仓库优先使用 `Glob` / `Grep` / AST 搜索，避免整文件无差别读取
+5. 风险分层优先于硬门槛：即使发现问题，也先判断其影响范围与修复优先级
 
-## 🛠 工具使用指南
+## 工具使用指南
 
-### 核心工具
--   **`Glob`**: 用于快速列出符合特定模式的文件，最佳用于验证项目结构（如查找所有 PHP 文件、测试文件等）。
-    - 示例：`Glob("**/*.php")` 查找所有 PHP 文件
-    - 示例：`Glob("modules/*/src/**/*.php")` 查找模块中的源码文件
+### 推荐工具
+- `Glob`: 枚举模块、源码、测试与配置文件
+- `Grep`: 检查 `strict_types`、调试函数、断言、注释测试等模式
+- `Read`: 读取规范文件、`phpunit.xml`、`composer.json`、`phpstan.neon`、关键样例文件
+- `SearchCodebase` / AST 搜索: 识别架构模式、跨模块引用与命名问题
 
--   **`Grep`**: 用于严格的模式匹配，最佳用于查找代码违规（如禁止使用的函数、缺少严格类型声明等）。
-    - 示例：`Grep("dd\\(|dump\\(", "*.php")` 查找调试函数
-    - 示例：`Grep("declare\\s*\\(\\s*strict_types\\s*=\\s*1\\s*\\);", "**/*.php")` 检查严格类型声明
+### 建议顺序
+1. `Glob(scan_roots)` → 建立模块地图
+2. `Read(phpunit.xml)` → 获取 testsuite / source / coverage 配置
+3. `Glob({scan_root}/*/tests/**/*Test.php)` → 发现真实测试资产
+4. `Grep(strict_types / debug / assert / 注释测试)` → 快速找高风险问题
+5. 抽样读取高风险文件 → 输出分层结论
 
--   **`Read`**: 用于读取规范文档、配置文件和深入分析特定问题文件。
-    - 示例：`Read("references/specs-qa.md")` 加载质量规范
-    - 示例：`Read("modules/user/phpunit.xml")` 检查测试配置
+## 报告输出要求
+始终包含以下信息：
 
--   **`Bash`**: 用于执行复杂的系统命令，如代码格式化、覆盖率计算等。
-    - 示例：`Bash("vendor/bin/pint modules/user")` 运行代码格式化
-    - 示例：`Bash("vendor/bin/phpunit --coverage-text modules/user")` 检查测试覆盖率
+1. 分析范围与排除项
+2. 三个维度的评分或成熟度结论（来自 `references/scoring.md`）
+3. 每个维度的风险分层发现
+4. 可执行的整改建议
+5. 优先级排序后的行动清单
 
-### 高级技巧
-1. **增量搜索**: 对于大型项目，先使用 Glob 缩小范围，再使用 Grep 搜索
-2. **模式匹配**: 使用正则表达式提高搜索精度
-3. **结果过滤**: 使用 `head` 和 `grep -v` 过滤无关结果
-4. **并行处理**: 对于独立任务，使用多个工具调用并行处理
-
-### 工作流程示例
-```
-1. Glob("modules/*/src") → 列出所有模块源码目录
-2. Read each module's composer.json → 检查依赖配置
-3. Grep for "dd(" in src/ → 查找调试函数
-4. Grep for "declare(strict_types" → 检查类型声明
-5. Analyze and compile report
-```
-
-## 📊 评分系统
-每个维度将根据以下标准进行评分：
-
-### 代码质量 (Code Quality) - 30分
-- **严格类型**: 5分 (所有 PHP 文件启用 strict_types)
-- **无调试函数**: 5分 (无 dd()/dump() 等)
-- **命名规范**: 5分 (符合 PascalCase/camelCase 规范)
-- **PSR-12 规范**: 10分 (代码格式化)
-- **i18n 支持**: 5分 (中文/英文文件一致)
-
-### 单元测试 (Unit Testing) - 30分
-- **测试结构**: 10分 (tests/ 目录与 src/ 结构一致)
-- **覆盖率**: 10分 (至少 80% 覆盖)
-- **测试质量**: 10分 (遵循 AAA 模式，使用 Faker)
-
-### API 文档 (API Documentation) - 20分
-- **OpenAPI 属性**: 10分 (控制器使用 OA 属性)
-- **Request/Response 类**: 5分 (使用正确的类结构)
-- **版本控制**: 5分 (API 版本规范)
-
-### 架构 (Architecture) - 20分
-- **设计模式**: 10分 (使用 Repository/Policy/Action 模式)
-- **解耦程度**: 10分 (依赖注入，事件驱动)
-
-## 📝 报告格式规范
-报告必须包含以下部分：
-
-### 1. 项目概述
-- 项目名称和版本
-- 分析时间
-- 分析范围
-
-### 2. 维度分析
-每个维度包含：
-- 得分和评级
-- 问题列表
-- 改进建议
-
-### 3. 问题详细信息
-每个问题必须包含：
-- 问题类型 (Error/Warning/Info)
-- 文件路径和行号
-- 违反的规范
-- 修复方法
-
-### 4. 总结与建议
-- 总体得分
-- 主要问题
-- 优先级排序的修复建议
+## 什么时候需要补充说明
+- 当 `phpunit.xml` 与真实测试分布不一致时，明确区分“配置声明的测试范围”和“仓库实际存在的测试文件”
+- 当覆盖率只能粗略估算时，说明估算依据，不要伪造精确百分比
+- 当模块结构偏离推荐规范但仍可维护时，标记为建议优化，而不是直接判定失败

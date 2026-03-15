@@ -3,97 +3,91 @@
   "evals": [
     {
       "id": 0,
-      "prompt": "请分析当前 Weiran 项目的质量状况，重点检查代码规范和测试覆盖率",
-      "expected_output": "生成包含代码质量、单元测试、API文档和架构分析的综合报告，指出违规项并提供改进建议",
+      "prompt": "请分析当前 Weiran 项目的质量状况，重点检查代码规范、测试发现和主要架构风险。扫描范围默认为 modules，先给出 dry-run 报告。",
+      "expected_output": "生成包含代码质量、单元测试和架构分析的综合报告，说明扫描范围、风险分层和整改建议。",
       "files": [],
       "assertions": [
         {
           "name": "包含代码质量分析",
-          "description": "报告必须包含代码质量维度的分析，包括严格类型检查、调试函数检查、命名规范检查等",
+          "description": "报告必须包含代码质量维度的分析，包括 strict_types、调试函数、命名或静态分析信号。",
           "type": "content",
-          "pattern": "代码质量|strict_types|dd\\(|dump\\("
+          "pattern": "代码质量|strict_types|调试|命名|PHPStan|Pint"
         },
         {
-          "name": "包含单元测试分析",
-          "description": "报告必须包含单元测试维度的分析，包括测试结构、覆盖率、测试质量等",
+          "name": "包含测试分析",
+          "description": "报告必须包含测试发现和测试质量分析，包括 phpunit.xml、testsuite、断言或调试残留。",
           "type": "content",
-          "pattern": "单元测试|tests/|coverage|AAA|Faker"
-        },
-        {
-          "name": "包含API文档分析",
-          "description": "报告必须包含API文档维度的分析，包括OpenAPI属性、Request/Response类、版本控制等",
-          "type": "content",
-          "pattern": "API文档|OA\\(|Request|Response|版本控制"
+          "pattern": "单元测试|phpunit.xml|testsuite|断言|dd\\(|dump\\(|测试发现"
         },
         {
           "name": "包含架构分析",
-          "description": "报告必须包含架构维度的分析，包括设计模式、解耦程度等",
+          "description": "报告必须包含架构维度的分析，包括模式、边界、耦合或可维护性。",
           "type": "content",
-          "pattern": "架构|设计模式|Repository|Policy|Action|依赖注入"
+          "pattern": "架构|Action|Service|Repository|耦合|可维护性"
+        },
+        {
+          "name": "包含风险分层",
+          "description": "报告必须按 high/medium/low 或高/中/低 风险分层输出发现。",
+          "type": "content",
+          "pattern": "高风险|中风险|低风险|High|Medium|Low"
         },
         {
           "name": "提供改进建议",
-          "description": "报告必须包含具体的改进建议",
+          "description": "报告必须包含具体的整改或建议动作。",
           "type": "content",
-          "pattern": "改进建议|修复方法|建议"
+          "pattern": "建议动作|整改建议|修复|优化"
         }
       ]
     },
     {
       "id": 1,
-      "prompt": "检查项目是否符合 Weiran Framework 规范，特别是 API 文档和架构设计",
-      "expected_output": "分析项目结构、代码规范、API文档完整性和架构模式，报告发现的问题和改进方案",
+      "prompt": "检查项目是否符合 Weiran Framework 的 QA 规范，但不要检查 OpenAPI。请重点看 scan_roots 下的业务模块、phpunit.xml 与 {scan_root}/*/tests 的一致性，并给出风险分层结论。",
+      "expected_output": "分析业务模块结构、代码规范、测试发现和架构模式，明确 scan_roots、排除项和高风险问题。",
       "files": [],
       "assertions": [
         {
-          "name": "分析项目结构",
-          "description": "报告必须分析项目结构是否符合规范",
+          "name": "说明扫描范围",
+          "description": "报告必须明确分析范围或 scan roots，而不是默认整个仓库。",
           "type": "content",
-          "pattern": "项目结构|modules/|src/|tests/"
+          "pattern": "分析范围|scan_roots|扫描范围|排除目录"
         },
         {
-          "name": "检查代码规范",
-          "description": "报告必须检查代码规范是否符合标准",
+          "name": "检查 phpunit 与模块测试一致性",
+          "description": "报告必须提到 phpunit.xml 与 {scan_root}/*/tests 的关系或差异。",
           "type": "content",
-          "pattern": "代码规范|PSR-12|命名规范|严格类型"
+          "pattern": "phpunit.xml|testsuite|测试资产|scan_root|扫描范围"
         },
         {
-          "name": "API文档完整性",
-          "description": "报告必须检查API文档的完整性",
+          "name": "包含架构模式分析",
+          "description": "报告必须分析架构模式或模块耦合。",
           "type": "content",
-          "pattern": "API文档|OpenAPI|Swagger|OA\\("
-        },
-        {
-          "name": "架构模式分析",
-          "description": "报告必须分析架构模式是否符合最佳实践",
-          "type": "content",
-          "pattern": "架构模式|Repository|Policy|Action|事件驱动"
+          "pattern": "架构|模式|耦合|边界|扩展性"
         }
       ]
     },
     {
       "id": 2,
-      "prompt": "对项目进行全面的 QA 分析，包括代码质量、测试覆盖和接口文档",
-      "expected_output": "生成详细的质量分析报告，包含各维度的得分、问题列表和优化建议",
+      "prompt": "对项目进行一次 QA 风险审查：使用外部 scoring 配置，不写入 docs，先输出 dry-run 摘要。请特别说明 strict_types、i18n、coverage 这些属于目标值还是高风险项。",
+      "expected_output": "生成详细的 QA 风险报告，体现评分来自外部 scoring 配置，并区分目标值、warning 与高风险问题。",
       "files": [],
       "assertions": [
         {
-          "name": "各维度得分",
-          "description": "报告必须包含各维度的得分",
+          "name": "提及外部评分配置",
+          "description": "报告必须体现评分来自独立 scoring 配置，而不是技能内硬编码。",
           "type": "content",
-          "pattern": "代码质量.*分|单元测试.*分|API文档.*分|架构.*分"
+          "pattern": "评分配置|scoring|目标值|风险等级"
         },
         {
-          "name": "问题列表",
-          "description": "报告必须包含问题列表",
+          "name": "区分目标值与风险项",
+          "description": "输出必须区分 strict_types、i18n、coverage 等属于目标值、warning 或高风险。",
           "type": "content",
-          "pattern": "问题列表|违规项|不符合"
+          "pattern": "目标值|warning|高风险|strict_types|i18n|coverage"
         },
         {
-          "name": "优化建议",
-          "description": "报告必须包含优化建议",
+          "name": "体现 dry-run 或可配置输出",
+          "description": "输出应体现 dry-run 摘要或可配置输出路径，而不是固定写入 docs。",
           "type": "content",
-          "pattern": "优化建议|改进方案|修复方法"
+          "pattern": "dry-run|输出路径|report_output|草稿"
         }
       ]
     }
